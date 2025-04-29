@@ -1,0 +1,12 @@
+# Ignore node_modules
+node_modules/
+
+# Ignore whatsapp-web.js cache and auth directories
+.wwebjs_cache/
+.wwebjs_auth/
+
+# Configurações do editor/IDE
+.vscode/
+
+# Cache do npm/yarn
+npm-cache/
