@@ -23,7 +23,7 @@ export class Auth implements AuthService {
 			return false
 		}
 
-		// Em modo de desenvolvimento, apenas o admin pode interagir
+		// Em desenvolvimento, apenas o admin pode interagir
 		if (config.isDevelopment) {
 			return this.isAdmin(phoneNumber)
 		}
@@ -41,6 +41,10 @@ export class Auth implements AuthService {
 		// Remove caracteres especiais para comparação
 		const normalizedPhone = phoneNumber.replace(/[^0-9]/g, "")
 		const normalizedAdmin = config.adminNumber.replace(/[^0-9]/g, "")
+
+		console.log("Comparando números:")
+		console.log("Número recebido:", normalizedPhone)
+		console.log("Número admin:", normalizedAdmin)
 
 		return normalizedPhone === normalizedAdmin
 	}

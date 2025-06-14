@@ -6,6 +6,7 @@ export class Gemini implements GeminiService {
 	private model: GenerativeModel
 
 	constructor() {
+		console.log("Inicializando serviço Gemini...")
 		const genAI = new GoogleGenerativeAI(config.geminiApiKey)
 		this.model = genAI.getGenerativeModel({
 			model: geminiConfig.model,
@@ -16,6 +17,7 @@ export class Gemini implements GeminiService {
 				maxOutputTokens: geminiConfig.maxOutputTokens,
 			},
 		})
+		console.log("✅ Serviço Gemini inicializado")
 	}
 
 	/**
@@ -42,9 +44,12 @@ export class Gemini implements GeminiService {
 	 */
 	async generateResponse(prompt: string): Promise<string> {
 		try {
+			console.log("Gerando resposta para:", prompt)
 			const result = await this.model.generateContent(prompt)
 			const response = await result.response
-			return response.text()
+			const text = response.text()
+			console.log("Resposta gerada:", text)
+			return text
 		} catch (error) {
 			console.error("Erro ao gerar resposta:", error)
 			throw new Error("Falha ao gerar resposta com Gemini")

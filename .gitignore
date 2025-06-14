@@ -14,3 +14,5 @@ npm-cache/
 session/
 
 .env
+
+dist

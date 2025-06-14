@@ -47,12 +47,18 @@ NODE_ENV=development
 ```bash
 npm run dev
 ```
+O modo de desenvolvimento usa o tsup em modo watch, que recompila automaticamente o código quando há alterações.
 
 ### Produção
 ```bash
 npm run build
 npm start
 ```
+O build de produção usa o tsup para:
+- Minificar o código
+- Otimizar o bundle
+- Gerar um único arquivo de saída
+- Limpar a pasta dist antes de cada build
 
 ## 📁 Estrutura do Projeto
 

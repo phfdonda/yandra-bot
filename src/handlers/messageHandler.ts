@@ -8,6 +8,7 @@ export class WhatsAppMessageHandler implements MessageHandler {
 
 	constructor() {
 		this.auth = new Auth()
+		console.log("✅ Manipulador de mensagens inicializado")
 	}
 
 	/**
@@ -30,7 +31,21 @@ export class WhatsAppMessageHandler implements MessageHandler {
 			console.log("De:", message.from)
 			console.log("Conteúdo:", message.body)
 			console.log("É do bot:", this.isBotMessage(message.body))
+
+			// Verifica se é mensagem de grupo
+			console.log("Obtendo informações do chat...")
+			const chat = await message.getChat()
+			const isGroup = chat.isGroup
+			console.log("É grupo:", isGroup)
+			console.log("É autorizado:", this.auth.isAuthorized(message.from))
+			console.log("É admin:", this.auth.isAdmin(message.from))
 			console.log("==============================\n")
+
+			// Ignora mensagens de grupos
+			if (isGroup) {
+				console.log("Ignorando mensagem de grupo")
+				return
+			}
 
 			// Ignora mensagens do bot
 			if (this.isBotMessage(message.body)) {
@@ -44,9 +59,12 @@ export class WhatsAppMessageHandler implements MessageHandler {
 				return
 			}
 
-			// Processa a mensagem se for do admin
-			if (this.auth.isAdmin(message.from)) {
-				console.log("Processando mensagem do admin")
+			// Processa a mensagem se for do admin ou se estiver em modo de desenvolvimento
+			if (
+				this.auth.isAdmin(message.from) ||
+				context.config.isDevelopment
+			) {
+				console.log("Processando mensagem...")
 
 				try {
 					// Gera resposta do Gemini
@@ -58,11 +76,12 @@ export class WhatsAppMessageHandler implements MessageHandler {
 
 					// Envia a resposta
 					console.log("Tentando enviar mensagem para:", message.from)
-					const chat = await message.getChat()
 					console.log("Chat obtido:", chat.id)
 
 					// Adiciona o prefixo do bot na resposta
-					await chat.sendMessage(BOT_PREFIX + response)
+					const fullResponse = BOT_PREFIX + response
+					console.log("Enviando mensagem:", fullResponse)
+					await chat.sendMessage(fullResponse)
 					console.log("✅ Mensagem enviada com sucesso")
 				} catch (error) {
 					console.error(
@@ -72,11 +91,12 @@ export class WhatsAppMessageHandler implements MessageHandler {
 
 					// Tenta enviar mensagem de erro
 					try {
-						const chat = await message.getChat()
-						await chat.sendMessage(
+						const errorMessage =
 							BOT_PREFIX +
-								"Desculpe, ocorreu um erro ao processar sua mensagem. Por favor, tente novamente."
-						)
+							"Desculpe, ocorreu um erro ao processar sua mensagem. Por favor, tente novamente."
+						console.log("Enviando mensagem de erro:", errorMessage)
+						await chat.sendMessage(errorMessage)
+						console.log("✅ Mensagem de erro enviada com sucesso")
 					} catch (errorMessageError) {
 						console.error(
 							"Erro ao enviar mensagem de erro:",
@@ -85,17 +105,21 @@ export class WhatsAppMessageHandler implements MessageHandler {
 					}
 				}
 			} else {
-				console.log("Mensagem ignorada - não é do admin")
+				console.log(
+					"Mensagem ignorada - não é do admin e não está em modo de desenvolvimento"
+				)
 			}
 		} catch (error) {
 			console.error("❌ Erro geral ao processar mensagem:", error)
 			try {
 				if (this.auth.isAdmin(message.from)) {
 					const chat = await message.getChat()
-					await chat.sendMessage(
+					const errorMessage =
 						BOT_PREFIX +
-							"Desculpe, ocorreu um erro ao processar sua mensagem. Por favor, tente novamente."
-					)
+						"Desculpe, ocorreu um erro ao processar sua mensagem. Por favor, tente novamente."
+					console.log("Enviando mensagem de erro:", errorMessage)
+					await chat.sendMessage(errorMessage)
+					console.log("✅ Mensagem de erro enviada com sucesso")
 				}
 			} catch (errorMessageError) {
 				console.error(
