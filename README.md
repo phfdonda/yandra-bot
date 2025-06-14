@@ -1,71 +1,96 @@
 # Yandra Bot 🤖
 
-Bot do WhatsApp para a Professora Yandra Gomes, utilizando Google Gemini AI para processamento de linguagem natural.
+Bot do WhatsApp para a Professora Yandra Gomes, utilizando Google Gemini AI para respostas automatizadas.
 
-## Funcionalidades
+## 🚀 Funcionalidades
 
-- 💬 Processamento de mensagens usando Google Gemini AI
-- ⏰ Agendamento de mensagens
-- 🔒 Sistema de autorização para controle de acesso
-- 📝 Logs detalhados para monitoramento
-- 🎯 Modo de desenvolvimento para testes
+- Respostas automáticas usando Google Gemini AI
+- Modo de desenvolvimento (apenas admin) e produção (todos)
+- Ignora mensagens de grupos
+- Sistema de prefixo para evitar loops de resposta
+- Logs detalhados para debug
 
-## Configuração
+## 📋 Pré-requisitos
 
-1. Clone o repositório
+- Node.js 18+
+- NPM ou Yarn
+- Conta no Google Cloud com API do Gemini ativada
+
+## 🔧 Instalação
+
+1. Clone o repositório:
+```bash
+git clone https://github.com/seu-usuario/yandra-bot.git
+cd yandra-bot
+```
+
 2. Instale as dependências:
 ```bash
 npm install
 ```
 
-3. Configure as variáveis de ambiente no arquivo `.env`:
-```env
-# Configurações do WhatsApp
-WHATSAPP_SESSION_PATH=./session
-
-# Configurações do Google Gemini
-GOOGLE_API_KEY=sua_chave_api_aqui
-
-# Configurações do Bot
-BOT_MODE=development  # ou 'production'
-ADMIN_NUMBER=seu_numero_aqui  # Número do administrador com código do país (ex: 5511999999999)
+3. Configure as variáveis de ambiente:
+```bash
+cp .env.example .env
 ```
 
-## Uso
+Edite o arquivo `.env` com suas configurações:
+```env
+ADMIN_NUMBER=5561999999999
+GEMINI_API_KEY=sua-chave-api
+NODE_ENV=development
+```
+
+## 🚀 Uso
 
 ### Desenvolvimento
-No modo de desenvolvimento (`BOT_MODE=development`):
-- Apenas o número do administrador pode interagir com o bot
-- Mensagens de outros números são silenciosamente ignoradas
-- Logs detalhados são exibidos no console para monitoramento
+```bash
+npm run dev
+```
 
 ### Produção
-No modo de produção (`BOT_MODE=production`):
-- Todos os números podem interagir com o bot
-- Logs são mantidos para monitoramento
-
-## Estrutura do Projeto
-
-```
-.
-├── src/
-│   ├── bot.js          # Configuração principal do bot
-│   ├── messageHandler.js # Manipulação de mensagens
-│   ├── scheduler.js    # Agendamento de mensagens
-│   ├── gemini.js       # Integração com Google Gemini AI
-│   └── auth.js         # Sistema de autorização
-├── .env               # Configurações do ambiente
-└── package.json       # Dependências do projeto
+```bash
+npm run build
+npm start
 ```
 
-## Contribuição
+## 📁 Estrutura do Projeto
+
+```
+src/
+├── config.ts           # Configurações do bot
+├── index.ts           # Arquivo principal
+├── types/             # Definições de tipos
+│   └── index.ts
+├── services/          # Serviços
+│   ├── auth.ts       # Autenticação
+│   └── gemini.ts     # Integração com Gemini
+└── handlers/          # Manipuladores
+    └── messageHandler.ts
+```
+
+## 🔍 Logs
+
+O bot possui um sistema de logs detalhado que mostra:
+- Conexão com WhatsApp
+- Conexão com Gemini
+- Mensagens recebidas
+- Processamento de mensagens
+- Erros e exceções
+
+## 🤝 Contribuindo
 
 1. Faça um fork do projeto
-2. Crie uma branch para sua feature (`git checkout -b feature/nova-feature`)
-3. Commit suas mudanças (`git commit -m 'Adiciona nova feature'`)
-4. Push para a branch (`git push origin feature/nova-feature`)
+2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
+3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
+4. Push para a branch (`git push origin feature/AmazingFeature`)
 5. Abra um Pull Request
 
-## Licença
+## 📝 Licença
 
-Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes. 
+Este projeto está sob a licença ISC.
+
+## ✨ Agradecimentos
+
+- [whatsapp-web.js](https://github.com/pedroslopez/whatsapp-web.js)
+- [Google Generative AI](https://ai.google.dev/) 
