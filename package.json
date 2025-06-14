@@ -1,17 +1,26 @@
 {
-  "name": "yandra-bot",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "start": "node --watch ."
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "module",
-  "dependencies": {
-    "qrcode-terminal": "^0.12.0",
-    "whatsapp-web.js": "^1.27.0"
-  }
+	"name": "yandra-bot",
+	"version": "1.0.0",
+	"description": "WhatsApp bot assistant for Professor Yandra Gomes, using Google Gemini AI for automated responses and scheduling",
+	"main": "index.js",
+	"scripts": {
+		"start": "node --watch .",
+		"dev": "node --watch ."
+	},
+	"keywords": [
+		"whatsapp",
+		"bot",
+		"education",
+		"gemini",
+		"ai"
+	],
+	"author": "",
+	"license": "ISC",
+	"type": "module",
+	"dependencies": {
+		"@google/generative-ai": "^0.2.0",
+		"dotenv": "^16.4.5",
+		"qrcode-terminal": "^0.12.0",
+		"whatsapp-web.js": "^1.30.0"
+	}
 }

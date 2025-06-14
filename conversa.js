@@ -1,30 +1,63 @@
+/**
+ * Classe que gerencia o estado de uma conversa com um aluno
+ */
 export class Conversa {
-	constructor(nomeCliente, removerConversaCallback) {
-		this.nomeCliente = nomeCliente || "aluno querido" // Nome do cliente ou fallback
-		this.mensagens = [] // Lista de mensagens trocadas
-		this.removerConversaCallback = removerConversaCallback // Callback para remover a conversa
-		this.timeout = null // Referência ao temporizador
+	/**
+	 * @param {string} nomeCliente - Nome do aluno
+	 * @param {Function} onEnd - Callback chamado quando a conversa termina
+	 */
+	constructor(nomeCliente, onEnd) {
+		this.nomeCliente = nomeCliente
+		this.onEnd = onEnd
+		this.historico = []
+		this.ultimaInteracao = Date.now()
+		this.timeout = null
+
+		// Configura timeout para limpar conversa inativa
+		this.resetTimeout()
 	}
 
-	adicionarMensagem(mensagem) {
-		this.mensagens.push(mensagem) // Adiciona a mensagem à lista
-		this.resetarTimeout() // Reinicia o temporizador a cada mensagem
+	/**
+	 * Adiciona uma mensagem ao histórico da conversa
+	 * @param {string} mensagem - Mensagem do aluno
+	 * @param {string} resposta - Resposta do bot
+	 */
+	adicionarMensagem(mensagem, resposta) {
+		this.historico.push({
+			timestamp: new Date(),
+			mensagem,
+			resposta,
+		})
+
+		// Mantém apenas as últimas 10 mensagens
+		if (this.historico.length > 10) {
+			this.historico.shift()
+		}
+
+		this.resetTimeout()
 	}
 
-	resetarTimeout() {
-		// Cancela o temporizador anterior, se existir
+	/**
+	 * Reseta o timeout de inatividade
+	 */
+	resetTimeout() {
 		if (this.timeout) {
 			clearTimeout(this.timeout)
 		}
 
-		// Configura um novo temporizador para encerrar a conversa após 30 minutos
+		// Limpa a conversa após 30 minutos de inatividade
 		this.timeout = setTimeout(() => {
-			if (this.removerConversaCallback) {
-				this.removerConversaCallback() // Remove a conversa do cache
-			}
-			console.log(
-				`Conversa com ${this.nomeCliente} foi encerrada por inatividade.`
-			)
-		}, 30 * 60 * 1000) // 30 minutos
+			this.onEnd()
+		}, 30 * 60 * 1000)
+	}
+
+	/**
+	 * Retorna o contexto da conversa para o Gemini AI
+	 * @returns {string} Contexto formatado
+	 */
+	getContexto() {
+		return this.historico
+			.map((h) => `Aluno: ${h.mensagem}\nBot: ${h.resposta}`)
+			.join("\n\n")
 	}
 }

@@ -10,3 +10,5 @@ node_modules/
 
 # Cache do npm/yarn
 npm-cache/
+
+session/
